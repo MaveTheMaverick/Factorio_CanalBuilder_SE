@@ -66,8 +66,7 @@ local waterfill_recipe = {
             amount = settings.startup["canalbuilder-water-barrel-cost"].value
         },
     },
-    result = "waterfill-item",
-    result_count = 1
+    results = {{type="item", name="waterfill-item", amount=1}}
 }
 
 -- item
@@ -90,22 +89,33 @@ local waterfill_placer = {
     icon = "__CanalBuilderMAV__/graphics/icons/waterfill_small.png",
     icon_size = 32,
     picture = emptyPic(),
-    collision_mask = {},
-    collision_box = {{-0.2, -0.6}, {0.2, 0.3}},
-    center_collision_mask = {"water-tile", "object-layer", "player-layer"},
-    flags = {"placeable-neutral", "player-creation", "filter-directions"},
-    fluid_box_tile_collision_test = {},
-    fluid = "water",
-    fluid_box = {
-        filter = "water",
-        pipe_connections = {
-            {
-                position = {0, 1},
-                type = "output"
-            }
-        },
-        production_type = "none"
+    collision_mask = data.raw["offshore-pump"]["offshore-pump"].collision_mask,
+    tile_buildability_rules =
+    {
+      {area = {{-0.4, -0.4}, {0.4, 0.4}}, required_tiles = {layers={ground_tile=true}}, colliding_tiles = {layers={water_tile=true}}, remove_on_collision = true},
+      {area = {{-0.4, -0.6}, {0.4, -1.4}}, required_tiles = {layers={water_tile=true}}, colliding_tiles = {layers={lava_tile=true}}},
     },
+    fluid_source_offset = {0, -1},
+    collision_box = {{-1.4, -0.6}, {1.4, 0.4}},
+    flags = data.raw["offshore-pump"]["offshore-pump"].flags,
+    fluid_box = {
+        volume = 100,
+        production_type = "none",
+        -- filter = "water",
+        pipe_connections =
+        {
+            {
+                position = {0, 0},
+                direction = defines.direction.south,
+                flow_direction = "output"
+            }
+        }
+    },
+    energy_source =
+    {
+      type = "void"
+    },
+    energy_usage = "1W",
     placeable_position_visualization = {
         priority = "extra-high-no-scale",
         filename = "__core__/graphics/cursor-boxes-32x32.png",
@@ -123,20 +133,6 @@ data:extend({
     waterfill_item,
     waterfill_placer
 })
-
-data.raw.tile["water-shallow"].collision_mask = {
-    "water-tile",
-    "floor-layer",
-    "resource-layer",
-    "doodad-layer",
-}
-
-data.raw.tile["water-mud"].collision_mask = {
-    "water-tile",
-    "floor-layer",
-    "resource-layer",
-    "doodad-layer",
-}
 
 for i = #waterfill_recipe.ingredients,1,-1 do
     if waterfill_recipe.ingredients[i].amount == 0 then

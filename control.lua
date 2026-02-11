@@ -30,6 +30,20 @@ local function replaceDummy(placed)
         replacement = "water-mud"
     end
 
+    -- the waterfill item is an offshore-pump so we can get the fluid it's technically trying to pull from
+    -- local tile_to_replace = surface.get_tile(placed.get_fluid_source_tile())
+    -- local tile_to_replace_fluid = tile_to_replace.prototype.fluid
+
+    -- simple handling of Aquilo and Fulgora special ocean fluids - placement on lava is blocked by collision mask
+    local target_fluid = placed.get_fluid_source_fluid()
+    if target_fluid == "ammoniacal-solution" then
+        replacement = "ammoniacal-ocean"
+    elseif target_fluid == "heavy-oil" then
+        replacement = "oil-ocean-shallow"
+    elseif target_fluid == "lava" then -- By default this should be impossible but if the collision_mask on lava or something else was changed this is nice to have
+        replacement = "lava"
+    end
+
     local dir     = placed.direction
     local pos     = placed.position
     local surface = placed.surface
@@ -63,6 +77,6 @@ end
 script.on_event(
     {defines.events.on_built_entity, defines.events.on_robot_built_entity},
     function(event)
-        if event.created_entity.name == placement then replaceDummy(event.created_entity) end
+        if event.entity.name == placement then replaceDummy(event.entity) end
     end
 )

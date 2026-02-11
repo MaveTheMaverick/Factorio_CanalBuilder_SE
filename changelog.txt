@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.0.0
+Date: 02. 10. 2026
+  Features:
+    - Updated to Factorio 2.0
+    - Canals can now extend Oil Ocean and Ammoniacal Ocean
+    - Canal placement should now be properly blocked by structures that are in the way (Instead of destroying the structures)
+    - Added Russian translation (Eldrinn-Elantey)
+---------------------------------------------------------------------------------------------------
 Version: 2.0.3
 Date: 01. 02. 2023
   Features:
